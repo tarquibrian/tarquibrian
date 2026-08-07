@@ -4,12 +4,28 @@
 
 <div align="center">
 
-[![Portafolio](https://img.shields.io/badge/PORTAFOLIO-f26286?style=flat-square&labelColor=080611)](https://github.com/tarquibrian)
+[![Portafolio](https://img.shields.io/badge/DEVANZIRE.COM-f26286?style=flat-square&labelColor=080611)](https://devanzire.com)
 [![LinkedIn](https://img.shields.io/badge/LINKEDIN-080611?style=flat-square&logo=linkedin&logoColor=c084fc)](https://linkedin.com/in/tarquibrian)
 [![Dribbble](https://img.shields.io/badge/DRIBBBLE-080611?style=flat-square&logo=dribbble&logoColor=c084fc)](https://dribbble.com/tarquibrian)
 [![Email](https://img.shields.io/badge/EMAIL-080611?style=flat-square&logo=gmail&logoColor=c084fc)](mailto:tarquiman@gmail.com)
+![Visitas](https://komarev.com/ghpvc/?username=tarquibrian&style=flat-square&color=f26286&labelColor=080611&label=VISITAS)
 
 </div>
+
+<br>
+
+## En corto
+
+<img align="right" width="400" alt="Workspace: tmux + Neovim" src="./assets/workspace.svg">
+
+- **Busco trabajo activamente** — ingeniero de software, con foco en producto e IA aplicada.
+- **Aprendiendo** — agentes IA en producción, y certificándome como **Azure AI Engineer (AI-102)**.
+- **Portafolio** — [devanzire.com](https://devanzire.com): artículos, laboratorio y experimentos en vivo.
+- **Preguntame sobre** — arquitectura frontend, sistemas de diseño, Neovim y tmux, o dónde conviene poner el límite de un LLM.
+- **Escribime** — [tarquiman@gmail.com](mailto:tarquiman@gmail.com) · [LinkedIn](https://linkedin.com/in/tarquibrian) · [Dribbble](https://dribbble.com/tarquibrian)
+- **Dato** — buena parte de mis repos son herramientas para mi propio entorno: `vanzi`, `devanzire.nvim`, plugins de tmux y dos juegos de dotfiles.
+
+<br clear="both">
 
 <br>
 
@@ -19,12 +35,37 @@
 
 ## Cómo trabajo
 
-Vengo del diseño y terminé en el código, así que no entrego mockups que nadie puede
-construir ni interfaces que nadie quiere usar. Diseño y programo la misma pieza.
+Ingeniero de software. Mido el trabajo por lo que queda corriendo, no por lo que quedó
+prolijo en una rama. Y antes de escribir, cuento: cuántas veces aparece el patrón, cuántas
+variantes hay en juego, cuál de ellas ya era la decisión de facto. Casi ningún problema de
+sistema es de estilo — son inventarios que nadie hizo.
 
-- **El entregable es algo desplegado.** Figma es el medio, no el resultado.
-- **Sistemas antes que pantallas.** Un radio, dos curvas de easing, cuatro duraciones. Si una decisión aparece dos veces, se vuelve token.
-- **Herramientas propias.** Si algo me estorba dos veces, lo automatizo. De ahí salieron `vanzi`, mis dotfiles y mi config de Neovim.
+- **Diagnóstico antes que solución.** Una interfaz no tenía "un problema de animación": tenía once duraciones y tres curvas repartidas entre archivos, y por eso un chip, una fila y un link se sentían tres productos distintos bajo el cursor. Encontrar eso es el trabajo; reducirlas a cuatro y dos fue la parte fácil.
+- **Dónde termina el determinismo.** En `facturabot` el modelo interpreta la intención y arma un borrador; los importes, los estados y la idempotencia se ejecutan de forma determinística. La frontera se dibuja donde el error deja de ser reversible.
+- **Lo descartado queda escrito.** Los caminos que no funcionaron se documentan con fecha, no se borran en silencio. Quien lea el repo después — o yo en seis meses — necesita saber qué ya se probó y por qué se cayó.
+- **Mi entorno es un proyecto más.** `vanzi`, mis dotfiles y `devanzire.nvim` están versionados y son reproducibles, con las mismas exigencias que le pongo a lo que entrego.
+
+<details>
+<summary><b>Un ejemplo: por qué la IA no emite la factura</b></summary>
+
+<br>
+
+`facturabot` recibe un audio o un texto por WhatsApp y termina emitiendo una factura fiscal
+ante el SIN. La tentación es dejar que el modelo haga todo el recorrido.
+
+No lo hace. El modelo interpreta la intención y arma un borrador. De ahí en adelante todo
+es determinístico: validación de importes, cálculo de impuestos, control de idempotencia,
+transición de estados. Ninguna factura se emite sin confirmación explícita.
+
+El motivo no es desconfianza en el modelo, es dónde caen las consecuencias. Un error de
+interpretación se corrige en la pantalla de confirmación y no cuesta nada. Un error de
+emisión queda registrado ante la administración tributaria y se arrastra. La frontera entre
+lo probabilístico y lo determinístico no se dibuja por elegancia: se dibuja donde el error
+deja de ser reversible.
+
+> WhatsApp es la interfaz, no el sistema fiscal.
+
+</details>
 
 <br>
 
@@ -45,6 +86,7 @@ construir ni interfaces que nadie quiere usar. Diseño y programo la misma pieza
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-080611?style=flat-square&logo=postgresql&logoColor=85b5ff)
 ![Supabase](https://img.shields.io/badge/Supabase-080611?style=flat-square&logo=supabase&logoColor=7cc7a5)
 ![Docker](https://img.shields.io/badge/Docker-080611?style=flat-square&logo=docker&logoColor=85b5ff)
+![Azure](https://img.shields.io/badge/Azure_AI-080611?style=flat-square&logo=microsoftazure&logoColor=85b5ff)
 
 ![Neovim](https://img.shields.io/badge/Neovim-080611?style=flat-square&logo=neovim&logoColor=7cc7a5)
 ![Lua](https://img.shields.io/badge/Lua-080611?style=flat-square&logo=lua&logoColor=85b5ff)
@@ -91,5 +133,5 @@ construir ni interfaces que nadie quiere usar. Diseño y programo la misma pieza
 <br>
 
 <div align="center">
-  <sub>¿Construimos algo? — <a href="mailto:tarquiman@gmail.com">tarquiman@gmail.com</a></sub>
+  <sub><b>Disponible para nuevas oportunidades</b> — <a href="mailto:tarquiman@gmail.com">tarquiman@gmail.com</a></sub>
 </div>

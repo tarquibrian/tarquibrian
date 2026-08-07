@@ -106,11 +106,14 @@ function star(cx, cy, r) {
   return `M${pts.join("L")}Z`;
 }
 
+/* Cada SVG embebe solo la fuente que usa: el terminal y el workspace son
+   íntegramente monoespaciados, y cargarles DM Sans les sumaba ~50 KB muertos. */
+const faceMono = `
+      @font-face{font-family:'DVZ Mono';src:url(data:font/woff2;base64,${b64.mono}) format('woff2');font-weight:100 800;font-style:normal}
+      .mono{font-family:'DVZ Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace}`;
 const face = `
       @font-face{font-family:'DVZ Sans';src:url(data:font/woff2;base64,${b64.sans}) format('woff2');font-weight:100 1000;font-style:normal}
-      @font-face{font-family:'DVZ Mono';src:url(data:font/woff2;base64,${b64.mono}) format('woff2');font-weight:100 800;font-style:normal}
-      .sans{font-family:'DVZ Sans',ui-sans-serif,system-ui,sans-serif}
-      .mono{font-family:'DVZ Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace}`;
+      .sans{font-family:'DVZ Sans',ui-sans-serif,system-ui,sans-serif}${faceMono}`;
 
 const bd = (o) => `stroke="${T.borderTint}" stroke-opacity="${o}"`;
 
@@ -307,7 +310,7 @@ function buildTerminal() {
   <title>brian --whoami</title>
   <desc>Ingeniero de software y disenador UX/UI. Proyectos: vanzi, facturabot, devanzire.nvim, puriq-agent.</desc>
   <defs>
-    <style>${face}</style>
+    <style>${faceMono}</style>
     <clipPath id="win"><rect width="${W}" height="${H}" rx="${T.radius}"/></clipPath>
     ${cmdA.clip}
     ${cmdB.clip}
@@ -346,8 +349,120 @@ function buildTerminal() {
 `;
 }
 
+/* ========================================================= workspace.svg ===
+   El equivalente a la ilustración que suelen poner los perfiles, pero dibujada
+   con el vocabulario de dvz-v1 — hairlines, un solo radio, etiquetas mono — en
+   lugar de un cartoon de stock que pelearía con el resto de la página.
+   Lo que muestra es real: tmux + Neovim, que es donde vive el trabajo. */
+function buildWorkspace() {
+  const W = 560, H = 420;
+  const BAR = 30, STATUS = 26;
+  const SIDE = 118;                    // ancho del árbol de archivos
+  const SPLIT = 250;                   // corte entre editor y terminal
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  const files = [
+    ["lua/", T.synComment, 0],
+    ["init.lua", T.synKeyword, 1],
+    ["keymaps.lua", T.synFg, 1],
+    ["vanzi/", T.synComment, 0],
+    ["install.sh", T.synFg, 1],
+    [".tmux.conf", T.synFg, 0],
+  ].map(([n, c, ind], i) =>
+    `<text class="mono" x="${12 + ind * 10}" y="${BAR + 26 + i * 20}" font-size="9.5" fill="${c}"${c === T.synFg ? ' fill-opacity="0.55"' : ""}>${esc(n)}</text>`
+  ).join("\n      ");
+
+  /* Las "líneas de código" son barras, no texto: a este tamaño el código real
+     sería ilegible y además obligaría a inventar código que no existe.
+     El generador es un LCG con semilla fija — hace falta que dos ejecuciones
+     del mismo commit produzcan un archivo idéntico, o cada build ensuciaría el
+     diff de git con ruido. */
+  let seed = 20260806;
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
+  const palette = [T.synKeyword, T.synProperty, T.synString, T.synFg, T.synComment, T.synNumber];
+  const LEFT = SIDE + 40, RIGHT = W - 34;
+
+  let cy = BAR + 24, lineNo = 1;
+  const codeLines = [], gutter = [];
+  while (cy < SPLIT - 16) {
+    gutter.push(`<text class="mono" x="${SIDE + 26}" y="${cy + 3.5}" font-size="8" fill="${T.synComment}" fill-opacity="0.45" text-anchor="end">${lineNo}</text>`);
+    const indent = rnd() < 0.42 ? 0 : rnd() < 0.72 ? 1 : 2;
+    let cx = LEFT + indent * 13;
+    while (cx < RIGHT - 26) {
+      const w = 20 + Math.floor(rnd() * 72);
+      if (cx + w > RIGHT) break;
+      codeLines.push(`<rect x="${cx.toFixed(0)}" y="${cy}" width="${w}" height="4" rx="2" fill="${palette[Math.floor(rnd() * palette.length)]}" fill-opacity="0.5"/>`);
+      cx += w + 9;
+      if (rnd() < 0.24) break; // corta la línea antes del margen, como el código real
+    }
+    cy += 16;
+    lineNo++;
+  }
+
+  const check = (x, y) =>
+    `<path d="M${x} ${y}l3 3.2l6-7" fill="none" stroke="${T.success}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+  // Segmentos de la barra de estado de tmux.
+  const seg = "dvz", segW = seg.length * 9 * 0.6 + 16;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Workspace: tmux y Neovim">
+  <title>Workspace — tmux + Neovim</title>
+  <desc>El entorno de desarrollo: arbol de archivos, editor y panel de terminal, con la barra de estado de tmux.</desc>
+  <defs>
+    <style>${faceMono}</style>
+    <clipPath id="wsWin"><rect width="${W}" height="${H}" rx="${T.radius}"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#wsWin)">
+    <rect width="${W}" height="${H}" fill="${T.synSurface}"/>
+
+    <rect width="${W}" height="${BAR}" fill="${T.synHeader}"/>
+    <rect x="16" y="11" width="8" height="8" rx="2" fill="${T.accent}" transform="rotate(45 20 15)"/>
+    <text class="mono" x="38" y="18.5" font-size="9" font-weight="500" fill="${T.synFg}" fill-opacity="0.5"
+          letter-spacing="1.8">TMUX · NEOVIM</text>
+    <rect y="${BAR}" width="${W}" height="1" fill="${T.synBorder}"/>
+
+    <!-- árbol de archivos -->
+    ${files}
+    <rect x="${SIDE}" y="${BAR}" width="1" height="${H - BAR - STATUS}" fill="${T.synBorder}"/>
+
+    <!-- editor -->
+    ${gutter.join("\n    ")}
+    ${codeLines.join("\n    ")}
+    <rect x="${SIDE}" y="${SPLIT}" width="${W - SIDE}" height="1" fill="${T.synBorder}"/>
+
+    <!-- panel de terminal -->
+    <path d="M${SIDE + 22} ${SPLIT + 22}l5 4.5l-5 4.5" fill="none" stroke="${T.accent}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <text class="mono" x="${SIDE + 36}" y="${SPLIT + 30}" font-size="10" fill="${T.synFg}" fill-opacity="0.85">vanzi doctor</text>
+    ${check(SIDE + 24, SPLIT + 48)}
+    <text class="mono" x="${SIDE + 40}" y="${SPLIT + 52}" font-size="10" fill="${T.synFg}" fill-opacity="0.5">tmux</text>
+    ${check(SIDE + 24, SPLIT + 68)}
+    <text class="mono" x="${SIDE + 40}" y="${SPLIT + 72}" font-size="10" fill="${T.synFg}" fill-opacity="0.5">neovim</text>
+    ${check(SIDE + 24, SPLIT + 88)}
+    <text class="mono" x="${SIDE + 40}" y="${SPLIT + 92}" font-size="10" fill="${T.synFg}" fill-opacity="0.5">dotfiles</text>
+    <path d="M${SIDE + 22} ${SPLIT + 106}l5 4.5l-5 4.5" fill="none" stroke="${T.accent}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="${SIDE + 36}" y="${SPLIT + 103}" width="7" height="13" fill="${T.accent}">
+      <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.45;0.5;0.95;1" dur="1.1s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- barra de estado de tmux -->
+    <rect y="${H - STATUS}" width="${W}" height="${STATUS}" fill="${T.synHeader}"/>
+    <rect y="${H - STATUS}" width="${W}" height="1" fill="${T.synBorder}"/>
+    <rect x="0" y="${H - STATUS}" width="${segW}" height="${STATUS}" fill="${T.accent}"/>
+    <text class="mono" x="${segW / 2}" y="${H - STATUS / 2 + 3.5}" font-size="9" font-weight="700"
+          fill="${T.synSurface}" text-anchor="middle" letter-spacing="1.2">${seg.toUpperCase()}</text>
+    <text class="mono" x="${segW + 14}" y="${H - STATUS / 2 + 3.5}" font-size="9" fill="${T.synFg}" fill-opacity="0.45"
+          letter-spacing="1">1:editor  2:server  3:db</text>
+    <text class="mono" x="${W - 14}" y="${H - STATUS / 2 + 3.5}" font-size="9" fill="${T.synFg}" fill-opacity="0.3"
+          text-anchor="end" letter-spacing="1">devanzire</text>
+  </g>
+  <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="${T.radius}" fill="none" stroke="${T.synBorder}"/>
+</svg>
+`;
+}
+
 fs.mkdirSync(OUT, { recursive: true });
-for (const [name, svg] of [["hero.svg", buildHero()], ["terminal.svg", buildTerminal()]]) {
+for (const [name, svg] of [["hero.svg", buildHero()], ["terminal.svg", buildTerminal()], ["workspace.svg", buildWorkspace()]]) {
   const p = path.join(OUT, name);
   fs.writeFileSync(p, svg);
   console.log(`${name.padEnd(14)} ${(fs.statSync(p).size / 1024).toFixed(0)} KB`);
