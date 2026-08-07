@@ -29,9 +29,10 @@ Ahora estoy trabajando en agentes IA en producción y certificándome en **Azure
 ## Cómo trabajo
 
 - **Mido antes de decidir.** Cuento cuántas veces se repite un patrón y cuántas variantes hay dando vueltas.
-- **Pocas decisiones, bien puestas.** Un radio, dos curvas de easing, cuatro duraciones. Si aparecen once, ese es el problema.
+- **Una sola fuente de verdad.** Un radio, dos curvas de easing, cuatro duraciones, definidas en un lugar y no repetidas en cada archivo.
+- **Diseño y programo la misma pieza.** No entrego un mockup que después alguien tiene que interpretar.
 - **El modelo interpreta, las reglas ejecutan.** Lo que no se puede deshacer no lo decide un LLM.
-- **Lo que descarto queda escrito**, con fecha.
+- **Documento las decisiones**, también las que descarto.
 
 <br>
 
