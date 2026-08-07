@@ -16,25 +16,15 @@
 
 ## Quién soy
 
-<img align="right" width="380" alt="Workspace: tmux + Neovim" src="./assets/workspace.svg">
-
 Ingeniero de software y diseñador UX/UI. Construyo productos web de punta a punta —de la
 investigación al deploy— y sistemas donde un modelo de lenguaje hace una parte del trabajo
 y el resto tiene que ser determinístico.
 
-Me interesan los sistemas más que las pantallas sueltas. Buena parte de lo que publico acá
-son las herramientas que salen de eso.
-
 **Ahora** — agentes IA en producción y certificándome como **Azure AI Engineer (AI-102)**.
-
 **Preguntame sobre** — arquitectura frontend, sistemas de diseño, Neovim y tmux, o dónde
 poner el límite de un LLM.
 
-<br clear="both">
-
-<br>
-
-<img src="./assets/terminal.svg" alt="brian --whoami" width="100%">
+<img src="./assets/session.svg" alt="Sesión de tmux: identidad y entorno de trabajo" width="100%">
 
 <br>
 

@@ -235,24 +235,35 @@ ${frame}
 </svg>
 `;
 }
+/* =========================================================== session.svg ===
+   Un solo activo en lugar de terminal.svg + workspace.svg. Los dos eran, en
+   realidad, la misma cosa partida: una sesión de tmux. Unidos en una ventana
+   con dos paneles, el ancho completo del README queda ocupado —el terminal
+   solo tenía medio cuadro vacío— y la barra de estado, que es la que le da
+   sentido a la escena, se dibuja una vez en vez de dos.
 
-/* ========================================================== terminal.svg === */
-function buildTerminal() {
-  /* Solo el bloque --whoami. Antes listaba también los proyectos, pero en el
-     README la tabla de Proyectos va inmediatamente debajo con la misma lista y
-     además enlazada: era la misma información dos veces, y la versión en SVG
-     es la que no se puede clickear. */
-  const W = 1200, H = 268;
-  const CH = 0.6; // JetBrains Mono: 600/1000 em por carácter, exacto.
-  const S = 17, SC = S * CH;          // cuerpo
-  const CS = 20, CSC = CS * CH;       // comandos
-  const X0 = 96;                      // margen izquierdo del texto
-  const COL_A = X0 + 11 * SC;         // columna de valores
-  const CYCLE = 9;
+   Izquierda: la lectura de identidad y el chequeo del entorno.
+   Derecha:   el editor, con su árbol de archivos. */
+function buildSession() {
+  /* La altura la fija el panel izquierdo, que es el que tiene contenido finito:
+     el cursor cierra en y=316 y debajo queda un margen de 28. El panel del
+     editor rellena solo hasta donde llegue. Sobredimensionarla dejaba un hueco
+     muerto abajo a la izquierda. */
+  const W = 1200, H = 372;
+  const BAR = 34, STATUS = 28;
+  const BODY = H - STATUS;             // el cuerpo llega hasta acá
+  const SPLIT = 620;                   // corte vertical entre los dos paneles
+  const TREE = SPLIT + 130;            // fin del árbol de archivos
+  const CYCLE = 11;
+
+  const CH = 0.6;                      // JetBrains Mono: 600/1000 em, exacto
+  const S = 14, SC = S * CH;           // cuerpo del panel izquierdo
+  const CS = 16, CSC = CS * CH;        // comandos
+  const X0 = 40;                       // margen del texto en el panel izquierdo
+  const COL = X0 + 10 * SC;            // columna de valores
 
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-  /** Aparición por opacidad, sobre el ciclo completo. */
   const fadeIn = (t) => {
     const a = (t / CYCLE).toFixed(4), b = ((t + 0.25) / CYCLE).toFixed(4);
     return `<animate attributeName="opacity" dur="${CYCLE}s" repeatCount="indefinite" keyTimes="0;${a};${b};1" values="0;0;1;1"/>`;
@@ -260,175 +271,132 @@ function buildTerminal() {
 
   /** El chevron del prompt, como path — ❯ no está en el subset latino. */
   const chevron = (x, y) =>
-    `<path d="M${x} ${y - 6}l7 6l-7 6" fill="none" stroke="${T.accent}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`;
+    `<path d="M${x} ${y - 5}l6 5l-6 5" fill="none" stroke="${T.accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
 
-  /** Un comando que se escribe solo: el clip revela, el ancho está fijado. */
-  const command = (id, text, y, tStart, tEnd) => {
+  /** El tilde de vanzi doctor — ✓ tampoco está en el subset. */
+  const check = (x, y) =>
+    `<path d="M${x} ${y}l3 3.4l6.5-7.4" fill="none" stroke="${T.success}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+  /** Un comando que se escribe solo: el clip revela y el ancho está fijado. */
+  const command = (id, text, y, t0, t1) => {
     const w = text.length * CSC;
-    const k = [0, tStart / CYCLE, tEnd / CYCLE, 1].map((v) => v.toFixed(4)).join(";");
+    const k = [0, t0 / CYCLE, t1 / CYCLE, 1].map((v) => v.toFixed(4)).join(";");
     return {
-      clip: `<clipPath id="${id}"><rect x="${X0}" y="${y - 22}" width="0" height="30"><animate attributeName="width" dur="${CYCLE}s" repeatCount="indefinite" keyTimes="${k}" values="0;0;${w.toFixed(1)};${w.toFixed(1)}"/></rect></clipPath>`,
+      clip: `<clipPath id="${id}"><rect x="${X0}" y="${y - 18}" width="0" height="26"><animate attributeName="width" dur="${CYCLE}s" repeatCount="indefinite" keyTimes="${k}" values="0;0;${w.toFixed(1)};${w.toFixed(1)}"/></rect></clipPath>`,
       body: `<g clip-path="url(#${id})"><text class="mono" x="${X0}" y="${y}" font-size="${CS}" fill="${T.synFg}" textLength="${w.toFixed(1)}" lengthAdjust="spacing">${esc(text)}</text></g>`,
     };
   };
 
-  const cmdA = command("typeA", "brian --whoami", 110, 0.2, 1.3);
+  const cmd1 = command("t1", "brian --whoami", 72, 0.3, 1.4);
+  const cmd2 = command("t2", "vanzi doctor", 196, 3.4, 4.4);
 
-  const rowsA = [
-    ["rol", "Ingeniero de software · Diseñador UX/UI", 146, 1.7],
-    ["enfoque", "producto de punta a punta: research -> UI -> código -> deploy", 174, 1.9],
-    ["entorno", "tmux · neovim · dotfiles · shell", 202, 2.1],
+  const rows = [
+    ["rol", "Ingeniero de software · Diseñador UX/UI", 102, 1.8],
+    ["enfoque", "producto de punta a punta", 126, 2.0],
+    ["entorno", "tmux · neovim · dotfiles · shell", 150, 2.2],
   ].map(([k, v, y, t]) =>
-    `<g opacity="0">${fadeIn(t)}<text class="mono" x="${X0}" y="${y}" font-size="${S}" fill="${T.synProperty}">${esc(k)}</text><text class="mono" x="${COL_A.toFixed(1)}" y="${y}" font-size="${S}" fill="${T.synFg}" fill-opacity="0.6">${esc(v)}</text></g>`
+    `<g opacity="0">${fadeIn(t)}<text class="mono" x="${X0}" y="${y}" font-size="${S}" fill="${T.synProperty}">${esc(k)}</text><text class="mono" x="${COL.toFixed(1)}" y="${y}" font-size="${S}" fill="${T.synFg}" fill-opacity="0.62">${esc(v)}</text></g>`
   ).join("\n      ");
 
-  const title = "DEVANZIRE — ZSH";
-  const titleW = measureTracked("mono", title, 11, 500, T.trackingCapsWide);
+  const checks = [["tmux", 226, 4.8], ["neovim", 250, 5.0], ["dotfiles", 274, 5.2]]
+    .map(([n, y, t]) =>
+      `<g opacity="0">${fadeIn(t)}${check(X0 + 2, y - 4)}<text class="mono" x="${X0 + 22}" y="${y}" font-size="${S}" fill="${T.synFg}" fill-opacity="0.5">${esc(n)}</text></g>`
+    ).join("\n      ");
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Terminal: quien soy y en que trabajo">
-  <title>brian --whoami</title>
+  /* --------------------------------------------------- panel del editor --- */
+  const files = [
+    ["lua/", T.synComment, 0], ["init.lua", T.synKeyword, 1], ["keymaps.lua", T.synFg, 1],
+    ["vanzi/", T.synComment, 0], ["install.sh", T.synFg, 1], [".tmux.conf", T.synFg, 0],
+  ].map(([n, c, ind], i) =>
+    `<text class="mono" x="${SPLIT + 18 + ind * 10}" y="${BAR + 28 + i * 21}" font-size="10" fill="${c}"${c === T.synFg ? ' fill-opacity="0.55"' : ""}>${esc(n)}</text>`
+  ).join("\n      ");
+
+  /* Barras en vez de código: a este tamaño el texto real sería ilegible y me
+     obligaría a inventar código que no existe. LCG con semilla fija para que
+     dos ejecuciones del mismo commit den un archivo idéntico. */
+  let seed = 20260807;
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
+  const palette = [T.synKeyword, T.synProperty, T.synString, T.synFg, T.synComment, T.synNumber];
+  const LEFT = TREE + 46, RIGHT = W - 34;
+
+  let cy = BAR + 26, lineNo = 1;
+  const code = [], gutter = [];
+  while (cy < BODY - 16) {
+    gutter.push(`<text class="mono" x="${TREE + 32}" y="${cy + 3.5}" font-size="9" fill="${T.synComment}" fill-opacity="0.45" text-anchor="end">${lineNo}</text>`);
+    let cx = LEFT + (rnd() < 0.42 ? 0 : rnd() < 0.72 ? 14 : 28);
+    while (cx < RIGHT - 26) {
+      const w = 22 + Math.floor(rnd() * 78);
+      if (cx + w > RIGHT) break;
+      code.push(`<rect x="${cx.toFixed(0)}" y="${cy}" width="${w}" height="4" rx="2" fill="${palette[Math.floor(rnd() * palette.length)]}" fill-opacity="0.5"/>`);
+      cx += w + 10;
+      if (rnd() < 0.22) break;
+    }
+    cy += 18;
+    lineNo++;
+  }
+
+  const title = "DEVANZIRE — TMUX";
+  const titleW = measureTracked("mono", title, 10, 500, T.trackingCapsWide);
+  const seg = "DVZ", segW = seg.length * 9 * 0.6 + 20;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Sesion de tmux: identidad y entorno de trabajo">
+  <title>DEVANZIRE — tmux</title>
   <desc>Rol: ingeniero de software y disenador UX/UI. Enfoque: producto de punta a punta. Entorno: tmux, neovim, dotfiles, shell.</desc>
   <defs>
     <style>${faceMono}</style>
-    <clipPath id="win"><rect width="${W}" height="${H}" rx="${T.radius}"/></clipPath>
-    ${cmdA.clip}
+    <clipPath id="sesWin"><rect width="${W}" height="${H}" rx="${T.radius}"/></clipPath>
+    ${cmd1.clip}
+    ${cmd2.clip}
   </defs>
 
-  <g clip-path="url(#win)">
+  <g clip-path="url(#sesWin)">
     <rect width="${W}" height="${H}" fill="${T.synSurface}"/>
-    <rect width="${W}" height="40" fill="${T.synHeader}"/>
-    <rect y="40" width="${W}" height="1" fill="${T.synBorder}"/>
-    <rect x="26" y="16" width="8" height="8" rx="2" fill="${T.accent}" transform="rotate(45 30 20)"/>
-    <text class="mono" x="${W / 2}" y="24.5" font-size="11" font-weight="500" text-anchor="middle"
-          fill="${T.synFg}" fill-opacity="0.55"
+
+    <rect width="${W}" height="${BAR}" fill="${T.synHeader}"/>
+    <rect x="22" y="13" width="8" height="8" rx="2" fill="${T.accent}" transform="rotate(45 26 17)"/>
+    <text class="mono" x="${W / 2}" y="21" font-size="10" font-weight="500" text-anchor="middle"
+          fill="${T.synFg}" fill-opacity="0.5"
           textLength="${titleW.toFixed(1)}" lengthAdjust="spacing">${title}</text>
+    <rect y="${BAR}" width="${W}" height="1" fill="${T.synBorder}"/>
 
+    <!-- panel izquierdo: identidad y chequeo del entorno -->
     <g>
-      <animate attributeName="opacity" dur="${CYCLE}s" repeatCount="indefinite" keyTimes="0;0.94;1" values="1;1;0"/>
+      <animate attributeName="opacity" dur="${CYCLE}s" repeatCount="indefinite" keyTimes="0;0.95;1" values="1;1;0"/>
+      ${chevron(22, 67)}
+      ${cmd1.body}
+      ${rows}
 
-      ${chevron(60, 104)}
-      ${cmdA.body}
-      ${rowsA}
+      <g opacity="0">${fadeIn(3.35)}${chevron(22, 191)}</g>
+      ${cmd2.body}
+      ${checks}
 
-      <g opacity="0">${fadeIn(2.5)}
-        ${chevron(60, 234)}
-        <rect x="${X0}" y="223" width="10" height="22" fill="${T.accent}">
+      <g opacity="0">${fadeIn(5.6)}
+        ${chevron(22, 307)}
+        <rect x="${X0}" y="298" width="8" height="18" fill="${T.accent}">
           <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.45;0.5;0.95;1" dur="1s" repeatCount="indefinite"/>
         </rect>
       </g>
     </g>
-  </g>
-  <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="${T.radius}" fill="none" stroke="${T.synBorder}"/>
-</svg>
-`;
-}
 
-/* ========================================================= workspace.svg ===
-   El equivalente a la ilustración que suelen poner los perfiles, pero dibujada
-   con el vocabulario de dvz-v1 — hairlines, un solo radio, etiquetas mono — en
-   lugar de un cartoon de stock que pelearía con el resto de la página.
-   Lo que muestra es real: tmux + Neovim, que es donde vive el trabajo. */
-function buildWorkspace() {
-  const W = 560, H = 420;
-  const BAR = 30, STATUS = 26;
-  const SIDE = 118;                    // ancho del árbol de archivos
-  const SPLIT = 250;                   // corte entre editor y terminal
-  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-  const files = [
-    ["lua/", T.synComment, 0],
-    ["init.lua", T.synKeyword, 1],
-    ["keymaps.lua", T.synFg, 1],
-    ["vanzi/", T.synComment, 0],
-    ["install.sh", T.synFg, 1],
-    [".tmux.conf", T.synFg, 0],
-  ].map(([n, c, ind], i) =>
-    `<text class="mono" x="${12 + ind * 10}" y="${BAR + 26 + i * 20}" font-size="9.5" fill="${c}"${c === T.synFg ? ' fill-opacity="0.55"' : ""}>${esc(n)}</text>`
-  ).join("\n      ");
-
-  /* Las "líneas de código" son barras, no texto: a este tamaño el código real
-     sería ilegible y además obligaría a inventar código que no existe.
-     El generador es un LCG con semilla fija — hace falta que dos ejecuciones
-     del mismo commit produzcan un archivo idéntico, o cada build ensuciaría el
-     diff de git con ruido. */
-  let seed = 20260806;
-  const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
-  const palette = [T.synKeyword, T.synProperty, T.synString, T.synFg, T.synComment, T.synNumber];
-  const LEFT = SIDE + 40, RIGHT = W - 34;
-
-  let cy = BAR + 24, lineNo = 1;
-  const codeLines = [], gutter = [];
-  while (cy < SPLIT - 16) {
-    gutter.push(`<text class="mono" x="${SIDE + 26}" y="${cy + 3.5}" font-size="8" fill="${T.synComment}" fill-opacity="0.45" text-anchor="end">${lineNo}</text>`);
-    const indent = rnd() < 0.42 ? 0 : rnd() < 0.72 ? 1 : 2;
-    let cx = LEFT + indent * 13;
-    while (cx < RIGHT - 26) {
-      const w = 20 + Math.floor(rnd() * 72);
-      if (cx + w > RIGHT) break;
-      codeLines.push(`<rect x="${cx.toFixed(0)}" y="${cy}" width="${w}" height="4" rx="2" fill="${palette[Math.floor(rnd() * palette.length)]}" fill-opacity="0.5"/>`);
-      cx += w + 9;
-      if (rnd() < 0.24) break; // corta la línea antes del margen, como el código real
-    }
-    cy += 16;
-    lineNo++;
-  }
-
-  const check = (x, y) =>
-    `<path d="M${x} ${y}l3 3.2l6-7" fill="none" stroke="${T.success}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`;
-
-  // Segmentos de la barra de estado de tmux.
-  const seg = "dvz", segW = seg.length * 9 * 0.6 + 16;
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Workspace: tmux y Neovim">
-  <title>Workspace — tmux + Neovim</title>
-  <desc>El entorno de desarrollo: arbol de archivos, editor y panel de terminal, con la barra de estado de tmux.</desc>
-  <defs>
-    <style>${faceMono}</style>
-    <clipPath id="wsWin"><rect width="${W}" height="${H}" rx="${T.radius}"/></clipPath>
-  </defs>
-
-  <g clip-path="url(#wsWin)">
-    <rect width="${W}" height="${H}" fill="${T.synSurface}"/>
-
-    <rect width="${W}" height="${BAR}" fill="${T.synHeader}"/>
-    <rect x="16" y="11" width="8" height="8" rx="2" fill="${T.accent}" transform="rotate(45 20 15)"/>
-    <text class="mono" x="38" y="18.5" font-size="9" font-weight="500" fill="${T.synFg}" fill-opacity="0.5"
-          letter-spacing="1.8">TMUX · NEOVIM</text>
-    <rect y="${BAR}" width="${W}" height="1" fill="${T.synBorder}"/>
-
-    <!-- árbol de archivos -->
+    <!-- separador de paneles y árbol de archivos -->
+    <rect x="${SPLIT}" y="${BAR}" width="1" height="${BODY - BAR}" fill="${T.synBorder}"/>
     ${files}
-    <rect x="${SIDE}" y="${BAR}" width="1" height="${H - BAR - STATUS}" fill="${T.synBorder}"/>
+    <rect x="${TREE}" y="${BAR}" width="1" height="${BODY - BAR}" fill="${T.synBorder}"/>
 
-    <!-- editor -->
+    <!-- panel derecho: el editor -->
     ${gutter.join("\n    ")}
-    ${codeLines.join("\n    ")}
-    <rect x="${SIDE}" y="${SPLIT}" width="${W - SIDE}" height="1" fill="${T.synBorder}"/>
+    ${code.join("\n    ")}
 
-    <!-- panel de terminal -->
-    <path d="M${SIDE + 22} ${SPLIT + 22}l5 4.5l-5 4.5" fill="none" stroke="${T.accent}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-    <text class="mono" x="${SIDE + 36}" y="${SPLIT + 30}" font-size="10" fill="${T.synFg}" fill-opacity="0.85">vanzi doctor</text>
-    ${check(SIDE + 24, SPLIT + 48)}
-    <text class="mono" x="${SIDE + 40}" y="${SPLIT + 52}" font-size="10" fill="${T.synFg}" fill-opacity="0.5">tmux</text>
-    ${check(SIDE + 24, SPLIT + 68)}
-    <text class="mono" x="${SIDE + 40}" y="${SPLIT + 72}" font-size="10" fill="${T.synFg}" fill-opacity="0.5">neovim</text>
-    ${check(SIDE + 24, SPLIT + 88)}
-    <text class="mono" x="${SIDE + 40}" y="${SPLIT + 92}" font-size="10" fill="${T.synFg}" fill-opacity="0.5">dotfiles</text>
-    <path d="M${SIDE + 22} ${SPLIT + 106}l5 4.5l-5 4.5" fill="none" stroke="${T.accent}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-    <rect x="${SIDE + 36}" y="${SPLIT + 103}" width="7" height="13" fill="${T.accent}">
-      <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.45;0.5;0.95;1" dur="1.1s" repeatCount="indefinite"/>
-    </rect>
-
-    <!-- barra de estado de tmux -->
-    <rect y="${H - STATUS}" width="${W}" height="${STATUS}" fill="${T.synHeader}"/>
-    <rect y="${H - STATUS}" width="${W}" height="1" fill="${T.synBorder}"/>
-    <rect x="0" y="${H - STATUS}" width="${segW}" height="${STATUS}" fill="${T.accent}"/>
-    <text class="mono" x="${segW / 2}" y="${H - STATUS / 2 + 3.5}" font-size="9" font-weight="700"
-          fill="${T.synSurface}" text-anchor="middle" letter-spacing="1.2">${seg.toUpperCase()}</text>
-    <text class="mono" x="${segW + 14}" y="${H - STATUS / 2 + 3.5}" font-size="9" fill="${T.synFg}" fill-opacity="0.45"
-          letter-spacing="1">1:editor  2:server  3:db</text>
-    <text class="mono" x="${W - 14}" y="${H - STATUS / 2 + 3.5}" font-size="9" fill="${T.synFg}" fill-opacity="0.3"
-          text-anchor="end" letter-spacing="1">devanzire</text>
+    <!-- barra de estado de tmux, una sola para toda la sesión -->
+    <rect y="${BODY}" width="${W}" height="${STATUS}" fill="${T.synHeader}"/>
+    <rect y="${BODY}" width="${W}" height="1" fill="${T.synBorder}"/>
+    <rect y="${BODY}" width="${segW}" height="${STATUS}" fill="${T.accent}"/>
+    <text class="mono" x="${segW / 2}" y="${BODY + STATUS / 2 + 3.5}" font-size="9" font-weight="700"
+          fill="${T.synSurface}" text-anchor="middle" letter-spacing="1.2">${seg}</text>
+    <text class="mono" x="${segW + 16}" y="${BODY + STATUS / 2 + 3.5}" font-size="9" fill="${T.synFg}"
+          fill-opacity="0.45" letter-spacing="1">1:editor  2:server  3:db</text>
+    <text class="mono" x="${W - 16}" y="${BODY + STATUS / 2 + 3.5}" font-size="9" fill="${T.synFg}"
+          fill-opacity="0.3" text-anchor="end" letter-spacing="1">devanzire.com</text>
   </g>
   <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="${T.radius}" fill="none" stroke="${T.synBorder}"/>
 </svg>
@@ -436,7 +404,7 @@ function buildWorkspace() {
 }
 
 fs.mkdirSync(OUT, { recursive: true });
-for (const [name, svg] of [["hero.svg", buildHero()], ["terminal.svg", buildTerminal()], ["workspace.svg", buildWorkspace()]]) {
+for (const [name, svg] of [["hero.svg", buildHero()], ["session.svg", buildSession()]]) {
   const p = path.join(OUT, name);
   fs.writeFileSync(p, svg);
   console.log(`${name.padEnd(14)} ${(fs.statSync(p).size / 1024).toFixed(0)} KB`);
