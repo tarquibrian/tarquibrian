@@ -14,16 +14,24 @@
 
 <br>
 
-## En corto
+## Quién soy
 
-<img align="right" width="400" alt="Workspace: tmux + Neovim" src="./assets/workspace.svg">
+<img align="right" width="380" alt="Workspace: tmux + Neovim" src="./assets/workspace.svg">
 
-- **Busco trabajo activamente** — ingeniero de software, con foco en producto e IA aplicada.
-- **Aprendiendo** — agentes IA en producción, y certificándome como **Azure AI Engineer (AI-102)**.
-- **Portafolio** — [devanzire.com](https://devanzire.com): artículos, laboratorio y experimentos en vivo.
-- **Preguntame sobre** — arquitectura frontend, sistemas de diseño, Neovim y tmux, o dónde conviene poner el límite de un LLM.
-- **Escribime** — [tarquiman@gmail.com](mailto:tarquiman@gmail.com) · [LinkedIn](https://linkedin.com/in/tarquibrian) · [Dribbble](https://dribbble.com/tarquibrian)
-- **Dato** — buena parte de mis repos son herramientas para mi propio entorno: `vanzi`, `devanzire.nvim`, plugins de tmux y dos juegos de dotfiles.
+Ingeniero de software y diseñador UX/UI. Construyo productos web de punta a punta —de la
+investigación al deploy— y, desde hace un tiempo, sistemas donde un modelo de lenguaje hace
+una parte del trabajo y el resto tiene que ser estrictamente determinístico.
+
+Me interesan los sistemas más que las pantallas sueltas: los tokens que impiden que una
+interfaz se contradiga a sí misma, los límites que impiden que un agente haga algo
+irreversible, las herramientas que vuelven reproducible un entorno de trabajo. Buena parte
+de lo que publico acá son justamente esas herramientas.
+
+**Ahora mismo** estoy profundizando en agentes IA en producción y certificándome como
+**Azure AI Engineer (AI-102)**.
+
+**Preguntame sobre** arquitectura frontend, sistemas de diseño, Neovim y tmux, o dónde
+conviene poner el límite de un LLM.
 
 <br clear="both">
 
@@ -33,12 +41,12 @@
 
 <br>
 
-## Cómo trabajo
+## Cómo pienso un problema
 
-Ingeniero de software. Mido el trabajo por lo que queda corriendo, no por lo que quedó
-prolijo en una rama. Y antes de escribir, cuento: cuántas veces aparece el patrón, cuántas
-variantes hay en juego, cuál de ellas ya era la decisión de facto. Casi ningún problema de
-sistema es de estilo — son inventarios que nadie hizo.
+Mido el trabajo por lo que queda corriendo, no por lo que quedó prolijo en una rama. Y antes
+de escribir, cuento: cuántas veces aparece el patrón, cuántas variantes hay en juego, cuál de
+ellas ya era la decisión de facto. Casi ningún problema de sistema es de estilo — son
+inventarios que nadie hizo.
 
 - **Diagnóstico antes que solución.** Una interfaz no tenía "un problema de animación": tenía once duraciones y tres curvas repartidas entre archivos, y por eso un chip, una fila y un link se sentían tres productos distintos bajo el cursor. Encontrar eso es el trabajo; reducirlas a cuatro y dos fue la parte fácil.
 - **Dónde termina el determinismo.** En `facturabot` el modelo interpreta la intención y arma un borrador; los importes, los estados y la idempotencia se ejecutan de forma determinística. La frontera se dibuja donde el error deja de ser reversible.
@@ -46,7 +54,7 @@ sistema es de estilo — son inventarios que nadie hizo.
 - **Mi entorno es un proyecto más.** `vanzi`, mis dotfiles y `devanzire.nvim` están versionados y son reproducibles, con las mismas exigencias que le pongo a lo que entrego.
 
 <details>
-<summary><b>Un ejemplo: por qué la IA no emite la factura</b></summary>
+<summary><b>Un caso concreto: por qué la IA no emite la factura</b></summary>
 
 <br>
 
@@ -66,6 +74,19 @@ deja de ser reversible.
 > WhatsApp es la interfaz, no el sistema fiscal.
 
 </details>
+
+<br>
+
+## Proyectos
+
+| Proyecto | Qué es | Stack |
+| :--- | :--- | :--- |
+| **[vanzi](https://github.com/tarquibrian/vanzi)** ⭐ 8 | Mi entorno de desarrollo empaquetado y reproducible | `Shell` |
+| **[devanzire.nvim](https://github.com/tarquibrian/devanzire.nvim)** | Mi configuración de Neovim, convertida en plugin instalable | `Lua` |
+| **[tmux-vanzi-hub](https://github.com/tarquibrian/tmux-vanzi-hub)** | Hub de sesiones y plugins para tmux | `JavaScript` |
+| **[facturabot](https://github.com/tarquibrian/facturabot)** | Facturación fiscal boliviana conversacional por WhatsApp | `TypeScript` |
+| **[puriq-agent](https://github.com/tarquibrian/puriq-agent)** | Agente sobre modelos de lenguaje | `Python` |
+| **[terbol-webapp](https://terbol-webapp.vercel.app)** | Webapp en producción | `TypeScript` |
 
 <br>
 
@@ -98,20 +119,7 @@ deja de ser reversible.
 
 <br>
 
-## En qué ando
-
-| Proyecto | Qué es | Stack |
-| :--- | :--- | :--- |
-| **[vanzi](https://github.com/tarquibrian/vanzi)** ⭐ 8 | Mi entorno de desarrollo empaquetado y reproducible | `Shell` |
-| **[devanzire.nvim](https://github.com/tarquibrian/devanzire.nvim)** | Mi configuración de Neovim, convertida en plugin instalable | `Lua` |
-| **[tmux-vanzi-hub](https://github.com/tarquibrian/tmux-vanzi-hub)** | Hub de sesiones y plugins para tmux | `JavaScript` |
-| **[facturabot](https://github.com/tarquibrian/facturabot)** | Facturación fiscal boliviana conversacional por WhatsApp | `TypeScript` |
-| **[puriq-agent](https://github.com/tarquibrian/puriq-agent)** | Agente sobre modelos de lenguaje | `Python` |
-| **[terbol-webapp](https://terbol-webapp.vercel.app)** | Webapp en producción | `TypeScript` |
-
-<br>
-
-## Métricas
+## Actividad
 
 <div align="center">
 
@@ -120,18 +128,16 @@ deja de ser reversible.
 
 <img width="98%" src="https://github-readme-activity-graph.vercel.app/graph?username=tarquibrian&bg_color=080611&color=e8e4f5&title_color=f26286&line=f26286&point=7cc7a5&area=true&area_color=c084fc&border_color=241f36&hide_border=false">
 
+<img alt="Serpiente recorriendo el grafo de contribuciones" src="https://raw.githubusercontent.com/tarquibrian/tarquibrian/output/snake.svg">
+
 </div>
 
 <br>
 
-## Contribuciones
+## Contacto
 
-<div align="center">
-  <img alt="Serpiente recorriendo el grafo de contribuciones" src="https://raw.githubusercontent.com/tarquibrian/tarquibrian/output/snake.svg">
-</div>
+Escribime a **[tarquiman@gmail.com](mailto:tarquiman@gmail.com)**, o por
+[LinkedIn](https://linkedin.com/in/tarquibrian). El trabajo completo —artículos, laboratorio
+y experimentos en vivo— está en **[devanzire.com](https://devanzire.com)**.
 
-<br>
-
-<div align="center">
-  <sub><b>Disponible para nuevas oportunidades</b> — <a href="mailto:tarquiman@gmail.com">tarquiman@gmail.com</a></sub>
-</div>
+<sub>Abierto a nuevas oportunidades como ingeniero de software.</sub>

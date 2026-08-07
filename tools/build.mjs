@@ -95,16 +95,6 @@ function textToPath(which, text, size, weight) {
   };
 }
 
-/** Estrella de 5 puntas como path — la ★ no está en el subset latino. */
-function star(cx, cy, r) {
-  const pts = [];
-  for (let i = 0; i < 10; i++) {
-    const rad = i % 2 === 0 ? r : r * 0.42;
-    const a = (-90 + i * 36) * (Math.PI / 180);
-    pts.push(`${(cx + rad * Math.cos(a)).toFixed(2)},${(cy + rad * Math.sin(a)).toFixed(2)}`);
-  }
-  return `M${pts.join("L")}Z`;
-}
 
 /* Cada SVG embebe solo la fuente que usa: el terminal y el workspace son
    íntegramente monoespaciados, y cargarles DM Sans les sumaba ~50 KB muertos. */
@@ -248,14 +238,17 @@ ${frame}
 
 /* ========================================================== terminal.svg === */
 function buildTerminal() {
-  const W = 1200, H = 430;
+  /* Solo el bloque --whoami. Antes listaba también los proyectos, pero en el
+     README la tabla de Proyectos va inmediatamente debajo con la misma lista y
+     además enlazada: era la misma información dos veces, y la versión en SVG
+     es la que no se puede clickear. */
+  const W = 1200, H = 268;
   const CH = 0.6; // JetBrains Mono: 600/1000 em por carácter, exacto.
   const S = 17, SC = S * CH;          // cuerpo
   const CS = 20, CSC = CS * CH;       // comandos
   const X0 = 96;                      // margen izquierdo del texto
-  const COL_A = X0 + 11 * SC;         // columna de valores, bloque --whoami
-  const COL_B = X0 + 18 * SC;         // columna de descripción, bloque --now
-  const CYCLE = 15;
+  const COL_A = X0 + 11 * SC;         // columna de valores
+  const CYCLE = 9;
 
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -280,7 +273,6 @@ function buildTerminal() {
   };
 
   const cmdA = command("typeA", "brian --whoami", 110, 0.2, 1.3);
-  const cmdB = command("typeB", "brian --now", 250, 3.0, 3.9);
 
   const rowsA = [
     ["rol", "Ingeniero de software · Diseñador UX/UI", 146, 1.7],
@@ -290,30 +282,16 @@ function buildTerminal() {
     `<g opacity="0">${fadeIn(t)}<text class="mono" x="${X0}" y="${y}" font-size="${S}" fill="${T.synProperty}">${esc(k)}</text><text class="mono" x="${COL_A.toFixed(1)}" y="${y}" font-size="${S}" fill="${T.synFg}" fill-opacity="0.6">${esc(v)}</text></g>`
   ).join("\n      ");
 
-  const projects = [
-    ["vanzi", "entorno de desarrollo en shell", 286, 4.3, 8],
-    ["facturabot", "facturación fiscal boliviana por WhatsApp", 314, 4.5, null],
-    ["devanzire.nvim", "mi configuración de Neovim, hecha plugin", 342, 4.7, null],
-    ["puriq-agent", "agente sobre modelos de lenguaje", 370, 4.9, null],
-  ].map(([n, d, y, t, stars]) => {
-    const sx = COL_B + d.length * SC + 24;
-    const badge = stars
-      ? `<path d="${star(sx, y - 5, 6)}" fill="${T.synNumber}"/><text class="mono" x="${sx + 11}" y="${y}" font-size="${S}" fill="${T.synNumber}">${stars}</text>`
-      : "";
-    return `<g opacity="0">${fadeIn(t)}<text class="mono" x="${X0}" y="${y}" font-size="${S}" fill="${T.synKeyword}">${esc(n)}</text><text class="mono" x="${COL_B.toFixed(1)}" y="${y}" font-size="${S}" fill="${T.synComment}">${esc(d)}</text>${badge}</g>`;
-  }).join("\n      ");
-
   const title = "DEVANZIRE — ZSH";
   const titleW = measureTracked("mono", title, 11, 500, T.trackingCapsWide);
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Terminal: quien soy y en que trabajo">
   <title>brian --whoami</title>
-  <desc>Ingeniero de software y disenador UX/UI. Proyectos: vanzi, facturabot, devanzire.nvim, puriq-agent.</desc>
+  <desc>Rol: ingeniero de software y disenador UX/UI. Enfoque: producto de punta a punta. Entorno: tmux, neovim, dotfiles, shell.</desc>
   <defs>
     <style>${faceMono}</style>
     <clipPath id="win"><rect width="${W}" height="${H}" rx="${T.radius}"/></clipPath>
     ${cmdA.clip}
-    ${cmdB.clip}
   </defs>
 
   <g clip-path="url(#win)">
@@ -332,13 +310,9 @@ function buildTerminal() {
       ${cmdA.body}
       ${rowsA}
 
-      <g opacity="0">${fadeIn(2.95)}${chevron(60, 244)}</g>
-      ${cmdB.body}
-      ${projects}
-
-      <g opacity="0">${fadeIn(5.3)}
-        ${chevron(60, 402)}
-        <rect x="${X0}" y="${402 - 11}" width="10" height="22" fill="${T.accent}">
+      <g opacity="0">${fadeIn(2.5)}
+        ${chevron(60, 234)}
+        <rect x="${X0}" y="223" width="10" height="22" fill="${T.accent}">
           <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.45;0.5;0.95;1" dur="1s" repeatCount="indefinite"/>
         </rect>
       </g>
