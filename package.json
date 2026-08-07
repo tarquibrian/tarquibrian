@@ -1,0 +1,13 @@
+{
+  "name": "tarquibrian-profile",
+  "private": true,
+  "type": "module",
+  "description": "Perfil de GitHub (tarquibrian/tarquibrian). Los SVG de assets/ se generan con el sistema de diseño de dvz-v1.",
+  "scripts": {
+    "build": "node tools/build.mjs"
+  },
+  "devDependencies": {
+    "fontkit": "^2.0.4",
+    "wawoff2": "^2.0.1"
+  }
+}

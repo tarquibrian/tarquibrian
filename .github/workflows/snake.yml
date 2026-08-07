@@ -1,0 +1,33 @@
+name: Generar serpiente de contribuciones
+
+on:
+  schedule:
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Generar SVG
+        uses: Platane/snk@v3
+        id: snake
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          # Paleta de dvz-v1: los puntos van del borde (--syntax-border) al
+          # acento (--ds-accent), y la serpiente en el rosa del acento.
+          outputs: |
+            dist/snake.svg?color_snake=%23f26286&color_dots=%23241f36,%234a3f66,%237e5ad2,%23c084fc,%23f26286
+
+      - name: Publicar en la rama output
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
