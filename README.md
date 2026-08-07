@@ -19,19 +19,16 @@
 <img align="right" width="380" alt="Workspace: tmux + Neovim" src="./assets/workspace.svg">
 
 Ingeniero de software y diseñador UX/UI. Construyo productos web de punta a punta —de la
-investigación al deploy— y, desde hace un tiempo, sistemas donde un modelo de lenguaje hace
-una parte del trabajo y el resto tiene que ser estrictamente determinístico.
+investigación al deploy— y sistemas donde un modelo de lenguaje hace una parte del trabajo
+y el resto tiene que ser determinístico.
 
-Me interesan los sistemas más que las pantallas sueltas: los tokens que impiden que una
-interfaz se contradiga a sí misma, los límites que impiden que un agente haga algo
-irreversible, las herramientas que vuelven reproducible un entorno de trabajo. Buena parte
-de lo que publico acá son justamente esas herramientas.
+Me interesan los sistemas más que las pantallas sueltas. Buena parte de lo que publico acá
+son las herramientas que salen de eso.
 
-**Ahora mismo** estoy profundizando en agentes IA en producción y certificándome como
-**Azure AI Engineer (AI-102)**.
+**Ahora** — agentes IA en producción y certificándome como **Azure AI Engineer (AI-102)**.
 
-**Preguntame sobre** arquitectura frontend, sistemas de diseño, Neovim y tmux, o dónde
-conviene poner el límite de un LLM.
+**Preguntame sobre** — arquitectura frontend, sistemas de diseño, Neovim y tmux, o dónde
+poner el límite de un LLM.
 
 <br clear="both">
 
@@ -43,33 +40,29 @@ conviene poner el límite de un LLM.
 
 ## Cómo pienso un problema
 
-Mido el trabajo por lo que queda corriendo, no por lo que quedó prolijo en una rama. Y antes
-de escribir, cuento: cuántas veces aparece el patrón, cuántas variantes hay en juego, cuál de
-ellas ya era la decisión de facto. Casi ningún problema de sistema es de estilo — son
+Antes de escribir, cuento: cuántas veces aparece el patrón, cuántas variantes hay en juego,
+cuál ya era la decisión de facto. Casi ningún problema de sistema es de estilo — son
 inventarios que nadie hizo.
 
-- **Diagnóstico antes que solución.** Una interfaz no tenía "un problema de animación": tenía once duraciones y tres curvas repartidas entre archivos, y por eso un chip, una fila y un link se sentían tres productos distintos bajo el cursor. Encontrar eso es el trabajo; reducirlas a cuatro y dos fue la parte fácil.
-- **Dónde termina el determinismo.** En `facturabot` el modelo interpreta la intención y arma un borrador; los importes, los estados y la idempotencia se ejecutan de forma determinística. La frontera se dibuja donde el error deja de ser reversible.
-- **Lo descartado queda escrito.** Los caminos que no funcionaron se documentan con fecha, no se borran en silencio. Quien lea el repo después — o yo en seis meses — necesita saber qué ya se probó y por qué se cayó.
-- **Mi entorno es un proyecto más.** `vanzi`, mis dotfiles y `devanzire.nvim` están versionados y son reproducibles, con las mismas exigencias que le pongo a lo que entrego.
+- **Diagnóstico antes que solución.** Una interfaz no tenía "un problema de animación": tenía once duraciones y tres curvas repartidas entre archivos. Encontrar eso es el trabajo; reducirlas a cuatro y dos fue lo fácil.
+- **Dónde termina el determinismo.** En `facturabot` el modelo interpreta; los importes, los estados y la idempotencia se ejecutan determinísticamente. La frontera va donde el error deja de ser reversible.
+- **Lo descartado queda escrito.** Los caminos que no funcionaron se documentan con fecha, no se borran en silencio.
 
 <details>
 <summary><b>Un caso concreto: por qué la IA no emite la factura</b></summary>
 
 <br>
 
-`facturabot` recibe un audio o un texto por WhatsApp y termina emitiendo una factura fiscal
-ante el SIN. La tentación es dejar que el modelo haga todo el recorrido.
+`facturabot` recibe un audio por WhatsApp y termina emitiendo una factura fiscal ante el SIN.
+La tentación es dejar que el modelo haga todo el recorrido.
 
-No lo hace. El modelo interpreta la intención y arma un borrador. De ahí en adelante todo
-es determinístico: validación de importes, cálculo de impuestos, control de idempotencia,
-transición de estados. Ninguna factura se emite sin confirmación explícita.
+No lo hace. El modelo interpreta la intención y arma un borrador; de ahí en adelante todo es
+determinístico —importes, impuestos, idempotencia, estados— y nada se emite sin confirmación
+explícita.
 
-El motivo no es desconfianza en el modelo, es dónde caen las consecuencias. Un error de
-interpretación se corrige en la pantalla de confirmación y no cuesta nada. Un error de
-emisión queda registrado ante la administración tributaria y se arrastra. La frontera entre
-lo probabilístico y lo determinístico no se dibuja por elegancia: se dibuja donde el error
-deja de ser reversible.
+No es desconfianza en el modelo, es dónde caen las consecuencias. Un error de interpretación
+se corrige en la confirmación y no cuesta nada; uno de emisión queda registrado ante la
+administración tributaria. La frontera va donde el error deja de ser reversible.
 
 > WhatsApp es la interfaz, no el sistema fiscal.
 
@@ -136,8 +129,6 @@ deja de ser reversible.
 
 ## Contacto
 
-Escribime a **[tarquiman@gmail.com](mailto:tarquiman@gmail.com)**, o por
-[LinkedIn](https://linkedin.com/in/tarquibrian). El trabajo completo —artículos, laboratorio
-y experimentos en vivo— está en **[devanzire.com](https://devanzire.com)**.
+**[tarquiman@gmail.com](mailto:tarquiman@gmail.com)** · [LinkedIn](https://linkedin.com/in/tarquibrian) · El trabajo completo está en **[devanzire.com](https://devanzire.com)**.
 
 <sub>Abierto a nuevas oportunidades como ingeniero de software.</sub>
