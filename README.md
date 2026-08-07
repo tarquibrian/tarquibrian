@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/hero.svg" alt="DEVANZIRE — Ingeniero de software y Diseñador UX/UI" width="100%">
+  <img src="./assets/hero.svg" alt="DEVANZIRE · Ingeniero de software y Diseñador UX/UI" width="100%">
 </div>
 
 <div align="center">
@@ -16,47 +16,22 @@
 
 ## Quién soy
 
-Ingeniero de software y diseñador UX/UI. Construyo productos web de punta a punta —de la
-investigación al deploy— y sistemas donde un modelo de lenguaje hace una parte del trabajo
-y el resto tiene que ser determinístico.
+Ingeniero de software y diseñador UX/UI. Construyo productos web de punta a punta, de la
+investigación al deploy, y sistemas donde un modelo de lenguaje hace una parte del trabajo y
+el resto tiene que ser determinístico.
 
-**Ahora** — agentes IA en producción y certificándome como **Azure AI Engineer (AI-102)**.
-**Preguntame sobre** — arquitectura frontend, sistemas de diseño, Neovim y tmux, o dónde
-poner el límite de un LLM.
+Ahora estoy trabajando en agentes IA en producción y certificándome en **Azure AI (AI-103)**.
 
 <img src="./assets/session.svg" alt="Sesión de tmux: identidad y entorno de trabajo" width="100%">
 
 <br>
 
-## Cómo pienso un problema
+## Cómo trabajo
 
-Antes de escribir, cuento: cuántas veces aparece el patrón, cuántas variantes hay en juego,
-cuál ya era la decisión de facto. Casi ningún problema de sistema es de estilo — son
-inventarios que nadie hizo.
-
-- **Diagnóstico antes que solución.** Una interfaz no tenía "un problema de animación": tenía once duraciones y tres curvas repartidas entre archivos. Encontrar eso es el trabajo; reducirlas a cuatro y dos fue lo fácil.
-- **Dónde termina el determinismo.** En `facturabot` el modelo interpreta; los importes, los estados y la idempotencia se ejecutan determinísticamente. La frontera va donde el error deja de ser reversible.
-- **Lo descartado queda escrito.** Los caminos que no funcionaron se documentan con fecha, no se borran en silencio.
-
-<details>
-<summary><b>Un caso concreto: por qué la IA no emite la factura</b></summary>
-
-<br>
-
-`facturabot` recibe un audio por WhatsApp y termina emitiendo una factura fiscal ante el SIN.
-La tentación es dejar que el modelo haga todo el recorrido.
-
-No lo hace. El modelo interpreta la intención y arma un borrador; de ahí en adelante todo es
-determinístico —importes, impuestos, idempotencia, estados— y nada se emite sin confirmación
-explícita.
-
-No es desconfianza en el modelo, es dónde caen las consecuencias. Un error de interpretación
-se corrige en la confirmación y no cuesta nada; uno de emisión queda registrado ante la
-administración tributaria. La frontera va donde el error deja de ser reversible.
-
-> WhatsApp es la interfaz, no el sistema fiscal.
-
-</details>
+- **Mido antes de decidir.** Cuento cuántas veces se repite un patrón y cuántas variantes hay dando vueltas.
+- **Pocas decisiones, bien puestas.** Un radio, dos curvas de easing, cuatro duraciones. Si aparecen once, ese es el problema.
+- **El modelo interpreta, las reglas ejecutan.** Lo que no se puede deshacer no lo decide un LLM.
+- **Lo que descarto queda escrito**, con fecha.
 
 <br>
 

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 372" width="1200" height="372" role="img" aria-label="Sesion de tmux: identidad y entorno de trabajo">
-  <title>DEVANZIRE — tmux</title>
+  <title>DEVANZIRE · tmux</title>
   <desc>Rol: ingeniero de software y disenador UX/UI. Enfoque: producto de punta a punta. Entorno: tmux, neovim, dotfiles, shell.</desc>
   <defs>
     <style>
@@ -17,7 +17,7 @@
     <rect x="22" y="13" width="8" height="8" rx="2" fill="#f26286" transform="rotate(45 26 17)"/>
     <text class="mono" x="600" y="21" font-size="10" font-weight="500" text-anchor="middle"
           fill="#e8e4f5" fill-opacity="0.5"
-          textLength="126.0" lengthAdjust="spacing">DEVANZIRE — TMUX</text>
+          textLength="126.0" lengthAdjust="spacing">DEVANZIRE · TMUX</text>
     <rect y="34" width="1200" height="1" fill="#241f36"/>
 
     <!-- panel izquierdo: identidad y chequeo del entorno -->

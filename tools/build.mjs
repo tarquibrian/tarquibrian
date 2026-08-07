@@ -175,8 +175,8 @@ function buildHero() {
       </line>
     </g>`;
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="DEVANZIRE — Ingeniero de software y disenador UX/UI">
-  <title>DEVANZIRE — Brian Tarqui</title>
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="DEVANZIRE, ingeniero de software y disenador UX/UI">
+  <title>DEVANZIRE · Brian Tarqui</title>
   <desc>Ingeniero de software y disenador UX/UI. github.com/tarquibrian</desc>
   <defs>
     <style>${face}
@@ -335,12 +335,12 @@ function buildSession() {
     lineNo++;
   }
 
-  const title = "DEVANZIRE — TMUX";
+  const title = "DEVANZIRE · TMUX";
   const titleW = measureTracked("mono", title, 10, 500, T.trackingCapsWide);
   const seg = "DVZ", segW = seg.length * 9 * 0.6 + 20;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Sesion de tmux: identidad y entorno de trabajo">
-  <title>DEVANZIRE — tmux</title>
+  <title>DEVANZIRE · tmux</title>
   <desc>Rol: ingeniero de software y disenador UX/UI. Enfoque: producto de punta a punta. Entorno: tmux, neovim, dotfiles, shell.</desc>
   <defs>
     <style>${faceMono}</style>
